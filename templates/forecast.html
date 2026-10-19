@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ShopInsight - Sales Forecast</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            color: #1e293b;
+        }
+        nav {
+            background: #172554;
+            padding: 18px;
+        }
+        nav a {
+            color: white;
+            margin-right: 18px;
+        }
+        main {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+        }
+        canvas {
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a href="/">Home</a>
+    <a href="/customers">Customers</a>
+    <a href="/products">Products</a>
+    <a href="/regions">Regions</a>
+    <a href="/forecast">Forecast</a>
+</nav>
+
+<main>
+    <h1>Sales Forecasting</h1>
+    <p>Historical monthly sales and predicted sales for the next three months.</p>
+
+    <div class="card">
+        <canvas id="forecastChart"></canvas>
+
+        {% if not actual_data %}
+        <p>No historical sales data is available yet.</p>
+        {% elif not forecast_data %}
+        <p>At least two months of valid sales data are needed for forecasting.</p>
+        {% endif %}
+    </div>
+</main>
+
+<script>
+const actual = {{ actual_data | tojson }};
+const predicted = {{ forecast_data | tojson }};
+
+const labels = [
+    ...actual.map(x => x.month),
+    ...predicted.map(x => x.month)
+];
+
+const actualValues = [
+    ...actual.map(x => x.sales),
+    ...predicted.map(() => null)
+];
+
+const forecastValues = [
+    ...actual.map(() => null),
+    ...predicted.map(x => x.sales)
+];
+
+new Chart(document.getElementById("forecastChart"), {
+    type: "line",
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: "Actual Sales",
+                data: actualValues,
+                borderColor: "#2563eb",
+                tension: 0.25
+            },
+            {
+                label: "Forecast Sales",
+                data: forecastValues,
+                borderColor: "#16a34a",
+                borderDash: [6, 4],
+                tension: 0.25
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: "Sales (₹)"
+                }
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>

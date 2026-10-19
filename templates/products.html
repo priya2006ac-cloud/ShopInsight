@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ShopInsight - Product Analytics</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+        header {
+            background: #172554;
+            color: white;
+            padding: 20px 30px;
+        }
+        header a {
+            color: white;
+            margin-right: 18px;
+        }
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 24px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0000000d;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 550px;
+        }
+        th, td {
+            text-align: left;
+            padding: 13px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background: #eff6ff;
+        }
+        @media(max-width: 600px) {
+            main { padding: 0 12px; }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>ShopInsight</h1>
+    <a href="/">Home</a>
+    <a href="/customers">Customers</a>
+    <a href="/products">Products</a>
+    <a href="/regions">Regions</a>
+</header>
+
+<main>
+    <h1>Product Analytics</h1>
+    <p>Analyze product sales, profit and quantity sold.</p>
+
+    <section class="card">
+        <h2>Top 10 Products by Sales</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Quantity Sold</th>
+                    <th>Sales</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in product_summary %}
+                <tr>
+                    <td>{{ p.product_name or "Unknown" }}</td>
+                    <td>{{ p.category or "Uncategorized" }}</td>
+                    <td>{{ p.quantity_sold or 0 }}</td>
+                    <td>₹{{ "{:,.2f}".format(p.total_sales or 0) }}</td>
+                    <td>₹{{ "{:,.2f}".format(p.total_profit or 0) }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5">No product data found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section class="card">
+        <h2>Sales by Category</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Quantity Sold</th>
+                    <th>Total Sales</th>
+                    <th>Total Profit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in category_summary %}
+                <tr>
+                    <td>{{ c.category or "Uncategorized" }}</td>
+                    <td>{{ c.quantity_sold or 0 }}</td>
+                    <td>₹{{ "{:,.2f}".format(c.total_sales or 0) }}</td>
+                    <td>₹{{ "{:,.2f}".format(c.total_profit or 0) }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">No category data found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>
