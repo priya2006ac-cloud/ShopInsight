@@ -36,7 +36,7 @@ Project Structure
 - "forecasting.py" – Forecasting logic
 - "templates/" – HTML templates
 - "static/" – CSS and JavaScript files
-- "![ShopInsight Dashboard](dashboard.png)
+- "![ShopInsight Dashboard](dashboard_screenshot.png/Screenshot%202026-10-21%20102152.png)
 
 How to Run
 
